@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>my-app</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+    <div class="container"> 
+      <button id="left" data-state="0" class="player">
+        <span class="wind">S</span>
+        <span class="point">25000</span>
+      </button>
+      <button id="up" data-state="0" class="player">
+        <span class="wind">W</span>
+        <span class="point">25000</span>
+      </button>
+      <button id="right" data-state="0" class="player">
+        <span class="wind">N</span>
+        <span class="point">25000</span>
+      </button>
+      <button id="down" data-state="0" class="player">
+        <span class="wind">E</span>
+        <span class="point">25000</span>
+      </button>
+      <button id="middle">
+        <span class="round">East 1</span>
+        <span id= "riichi" class="riichi">Riichi: 0</span>
+        <span class="repeat">Repeat: 0</span>
+      </button>
+    </div>
+    <div id="mask" class="mask hidden"> </div>
+    <div id="scoring-modal" class="modal hidden">
+      <h2>Select Outcome</h2>
+      <button id="tsumo" class="option">Tsumo</button>
+      <button id="ron" class="option">Ron</button>
+      <button class="option">Exhaust Draw</button>
+      <button class="option">Abortion</button>
+      <button class="option">Custom Transfer</button>
+      <button id="close-scoring">Close</button>
+    </div>
+    <div id="query-modal" class="modal hidden">
+      
+    </div>
+
+
+  </body>
+</html>
