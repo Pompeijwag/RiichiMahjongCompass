@@ -9,6 +9,8 @@ const ron = document.querySelector<HTMLButtonElement>("#ron");
 const tsumo = document.querySelector<HTMLButtonElement>("#tsumo");
 const riichi = document.querySelector<HTMLSpanElement>("#riichi");
 
+const players = document.querySelectorAll('#left, #up, #right, #down');
+
 var honba = 0
 var round = "East";
 var roundnumber = 1;
@@ -162,9 +164,6 @@ function dealInStage(): void {
         }
         else if(step == 1 || tsumobool){
           if(tsumobool){
-            if(question){
-              console.log("man wtf")
-            }
             roner = button.querySelector<HTMLSpanElement>(".point")?.textContent!;
             getHan()
           }
@@ -313,27 +312,63 @@ function finalscore() : void {
     }
     query.innerHTML = step4;
     ronerPlayer = Array.from(document.querySelectorAll('.player')).find(btn => btn.querySelector('.wind')?.textContent === roner!) as HTMLButtonElement;
-    dealtinPlayer = Array.from(document.querySelectorAll('.player')).find(btn => btn.querySelector('.wind')?.textContent === dealtin!) as HTMLButtonElement;
-    var score = getPoints(han, fu, roner! == 'E', tsumobool);
-    var finalscore = score;
+    if(!tsumobool){
+      dealtinPlayer = Array.from(document.querySelectorAll('.player')).find(btn => btn.querySelector('.wind')?.textContent === dealtin!) as HTMLButtonElement;
+    }
+    var finalscore = getPoints(han, fu, roner! == 'E', tsumobool);
     query.querySelectorAll(".option").forEach(btn =>{
       btn.addEventListener("click", event => {
-        handleTransfer(finalscore)
+        if(tsumobool){
+          handleTransfer(0, finalscore)
+        }
+        else{
+          handleTransfer(finalscore)
+        }
+
       })
     })
     const title = query.querySelector<HTMLSpanElement>(".title")
-    if(han > 12){
-      finalscore = 32000;
-    }
     if(title){
       title.textContent = "Han: " + han + " Fu: " + fu + " Final Score: " + finalscore
     }
   }
 }
 
-function handleTransfer(score: number) : void {
-  ronerPlayer.querySelector('.point')!.textContent! = (parseInt(ronerPlayer.querySelector('.point')!.textContent) + score).toString();
-  dealtinPlayer.querySelector('.point')!.textContent! = (parseInt(dealtinPlayer.querySelector('.point')!.textContent!) - score).toString();
+function handleTransfer(score: number, tsumo?: [number, number]) : void {
+  console.log("Got " + score + " and " + tsumo);
+  if(tsumo){
+    if(roner! == 'E'){ 
+      players.forEach(player => {
+        const windSpan = player.querySelector('.wind') as HTMLSpanElement;
+        const current = windSpan.textContent!;
+        if(current == 'E'){
+          player.querySelector('.point')!.textContent = (parseInt(player.querySelector('.point')!.textContent) + tsumo[0] * 3).toString();
+        }
+        else{
+          player.querySelector('.point')!.textContent = (parseInt(player.querySelector('.point')!.textContent) - tsumo[0]).toString();
+        }
+      });
+    }
+    else{
+      players.forEach(player => {
+        const windSpan = player.querySelector('.wind') as HTMLSpanElement;
+        const current = windSpan.textContent!;
+        if(current == roner!){
+          player.querySelector('.point')!.textContent = (parseInt(player.querySelector('.point')!.textContent) + tsumo[0] * 2 + tsumo[1]).toString();
+        }
+        else if(current == 'E'){
+          player.querySelector('.point')!.textContent = (parseInt(player.querySelector('.point')!.textContent) - tsumo[1]).toString();
+        }
+        else{
+          player.querySelector('.point')!.textContent = (parseInt(player.querySelector('.point')!.textContent) - tsumo[0]).toString();
+        }
+      });
+    }
+  } 
+  else {
+    ronerPlayer.querySelector('.point')!.textContent! = (parseInt(ronerPlayer.querySelector('.point')!.textContent) + score).toString();
+    dealtinPlayer.querySelector('.point')!.textContent! = (parseInt(dealtinPlayer.querySelector('.point')!.textContent!) - score).toString();
+  }
   query?.classList.add("hidden")
   mask?.classList.add("hidden");
   if(roner! != 'E') {
@@ -348,6 +383,7 @@ function handleTransfer(score: number) : void {
   else{
     honba++;
   }
+  fu = 20;
   updateInfo();
 }
 
@@ -361,10 +397,6 @@ const nextWind: Record<string, string> = {
   "West": "North",
   "North": "East"
 };
-
-
-const players = document.querySelectorAll('#left, #up, #right, #down');
-  
 
 function rotateWinds() {
 
