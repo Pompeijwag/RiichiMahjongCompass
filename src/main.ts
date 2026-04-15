@@ -28,6 +28,3 @@ document.querySelectorAll(".player").forEach(btn =>{
     }
   })
 })
-
-
-console.log("Hello from bitches")
